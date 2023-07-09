@@ -1,21 +1,21 @@
-import express from "express";
-import http from "http";
-import { createServer } from "http";
-import { Server } from "socket.io";
-
+const express = require("express");
 const app = express();
-const server = createServer(app);
-const io = new Server(server);
-
-app.use(express.static(__dirname + "/public"));
-
 
 let broadcaster;
 const onlineServers = [];
 const sockets = [];
 
 const port = 3000;
+
+const http = require("http");
+const server = http.createServer(app);
+
+const io = require("socket.io")(server);
+app.use(express.static(__dirname + "/public"));
+
 io.sockets.on("error", e => console.log(e));
+
+
 io.sockets.on("connection", socket => {
   const sessionId = socket.id;
   sockets.push(socket)
